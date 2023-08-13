@@ -56,87 +56,90 @@ class _SignupState extends State<Signup> {
     return Scaffold(
       body: Form(
         key: _formkey,
-        child: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              !isLogin
-                  ? TextFormField(
-                key: ValueKey('username'),
-                decoration: InputDecoration(hintText: "Enter Username"),
-                validator: (value) {
-                  if (value.toString().length < 6) {
-                    return 'Username is too small';
-                  } else {
-                    return null;
-                  }
-                },
-                onSaved: (value) {
-                  setState(() {
-                    username = value!;
-                  });
-                },
-              )
-                  : Container(),
-              TextFormField(
-                key: ValueKey('email'),
-                decoration: InputDecoration(hintText: "Enter Email"),
-                validator: (value) {
-                  if (!value.toString().contains('@')) {
-                    return 'Invalid email';
-                  } else {
-                    return null;
-                  }
-                },
-                onSaved: (value) {
-                  setState(() {
-                    email = value!;
-                  });
-                },
-              ),
-              TextFormField(
-                obscureText: true,
-                key: ValueKey('password'),
-                decoration: InputDecoration(hintText: "Password"),
-                validator: (value) {
-                  if (value.toString().length < 6) {
-                    return 'Password is too small';
-                  } else {
-                    return null;
-                  }
-                },
-                onSaved: (value) {
-                  setState(() {
-                    password = value!;
-                  });
-                },
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formkey.currentState!.validate()) {
-                    _formkey.currentState!.save();
-                    isLogin ? signinUser() : signupUser();
-                  }
-                },
-                child: isLogin ? Text('Login') : Text('Sign-up'),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    isLogin = !isLogin;
-                  });
-                },
-                child: isLogin
-                    ? Text('Don\'t have an account? Sign up')
-                    : Text('Already Signed up? Login'),
-              ),
-            ],
+        child: Padding(
+          padding: EdgeInsets.all(8),
+          child: Container(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                !isLogin
+                    ? TextFormField(
+                  key: ValueKey('username'),
+                  decoration: InputDecoration(hintText: "Enter Username"),
+                  validator: (value) {
+                    if (value.toString().length < 6) {
+                      return 'Username is too small';
+                    } else {
+                      return null;
+                    }
+                  },
+                  onSaved: (value) {
+                    setState(() {
+                      username = value!;
+                    });
+                  },
+                )
+                    : Container(),
+                TextFormField(
+                  key: ValueKey('email'),
+                  decoration: InputDecoration(hintText: "Enter Email"),
+                  validator: (value) {
+                    if (!value.toString().contains('@')) {
+                      return 'Invalid email';
+                    } else {
+                      return null;
+                    }
+                  },
+                  onSaved: (value) {
+                    setState(() {
+                      email = value!;
+                    });
+                  },
+                ),
+                TextFormField(
+                  obscureText: true,
+                  key: ValueKey('password'),
+                  decoration: InputDecoration(hintText: "Password"),
+                  validator: (value) {
+                    if (value.toString().length < 6) {
+                      return 'Password is too small';
+                    } else {
+                      return null;
+                    }
+                  },
+                  onSaved: (value) {
+                    setState(() {
+                      password = value!;
+                    });
+                  },
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formkey.currentState!.validate()) {
+                      _formkey.currentState!.save();
+                      isLogin ? signinUser() : signupUser();
+                    }
+                  },
+                  child: isLogin ? Text('Login') : Text('Sign-up'),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      isLogin = !isLogin;
+                    });
+                  },
+                  child: isLogin
+                      ? Text('Don\'t have an account? Sign up')
+                      : Text('Already Signed up? Login'),
+                ),
+              ],
+            ),
           ),
         ),
       ),

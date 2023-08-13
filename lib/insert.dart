@@ -1,8 +1,9 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'Barcode.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'homepage.dart';
 
 class RealDB extends StatefulWidget {
@@ -16,7 +17,7 @@ class _RealDBState extends State<RealDB> {
   var nameController = new TextEditingController();
   var costController = new TextEditingController();
   var dateController = new TextEditingController();
-  String _scanResult = '';
+  var _scanResult = '';
 
   Future<void> _scanBarcode() async {
     String barcodeScanResult = await FlutterBarcodeScanner.scanBarcode(
@@ -29,23 +30,30 @@ class _RealDBState extends State<RealDB> {
     });
   }
 
+  final databaseRef = FirebaseDatabase.instance.reference();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: GestureDetector(
+            onTap: () => Navigator.of(context).push(new MaterialPageRoute(
+                builder: (BuildContext context) => new Home())),
+            child: Icon(Icons.arrow_back)),
+        title: Text(
+          'Add item',
+          style: TextStyle(fontSize: 28),
+        ),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              Text(
-                "Insert Data",
-                style: TextStyle(fontSize: 28),
-              ),
-              SizedBox(height: 30),
               TextFormField(
                 controller: nameController,
                 decoration: InputDecoration(
-                    labelText: 'Name', border: OutlineInputBorder()),
+                    labelText: 'Name of Product', border: OutlineInputBorder()),
               ),
               SizedBox(height: 30),
               TextFormField(
@@ -120,8 +128,12 @@ class _RealDBState extends State<RealDB> {
 
               ElevatedButton(
                   onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Home()));
+                    if (nameController.text.isNotEmpty &&
+                        costController.text.isNotEmpty &&
+                        _scanResult != -1 &&
+                        dateController.text.isNotEmpty)
+                      insertData(nameController.text, costController.text,
+                          _scanResult, dateController.text);
                   },
                   child: Text("Submit"))
             ],
@@ -129,5 +141,20 @@ class _RealDBState extends State<RealDB> {
         ),
       ),
     );
+  }
+
+  void insertData(String name, String cost, String scan, String date) {
+    // String key=databaseRef.child("Products").child("List").push().key;
+    databaseRef.child("Products").child("List").push().set({
+      // 'id':key,
+      'name': name,
+      'cost': cost,
+      'code': scan,
+      'date': date,
+    });
+    nameController.clear();
+    dateController.clear();
+    costController.clear();
+    _scanResult = '';
   }
 }
